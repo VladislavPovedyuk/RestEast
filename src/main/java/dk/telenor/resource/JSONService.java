@@ -1,8 +1,9 @@
-package dk.telenor.service;
+package dk.telenor.resource;
 
 import dk.telenor.*;
 import dk.telenor.SecurityException;
 import dk.telenor.entity.Employee;
+import dk.telenor.entity.SecurityToken;
 import dk.telenor.storage.Company;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,9 +105,10 @@ public class JSONService {
     @Path("/register")
     @Produces("text/plain")
     @Consumes("application/json")
-    public Response registerToken(String token, @Context HttpServletRequest request) throws dk.telenor.SecurityException {
-        if (token != null && !token.isEmpty()) {
-            Company.getTokens().put(token, new Date().getTime());
+    public Response registerToken(SecurityToken token) throws dk.telenor.SecurityException {
+        if (token != null && !token.getToken().isEmpty()) {
+            Company.getTokens().put(token.getToken(), new Date().getTime());
+            System.out.println("Token " + token.getToken() + " registered");
         } else {
             throw new SecurityException("Provide security token");
         }
