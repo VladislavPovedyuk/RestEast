@@ -1,6 +1,10 @@
-package dk.telenor.rest;
+package dk.telenor.storage;
 
-import java.sql.Time;
+
+import dk.telenor.entity.Department;
+import dk.telenor.entity.Employee;
+import dk.telenor.service.TokenCheckerThread;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -30,6 +34,7 @@ public class Company {
         departments.put(2, new Department(2, "QA Dept."));
         departments.put(3, new Department(3, "CA Dept."));
         departments.put(4, new Department(4, "Management"));
+
 
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         TokenCheckerThread tokenCheckerThread = new TokenCheckerThread();

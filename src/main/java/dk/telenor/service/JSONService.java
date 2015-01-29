@@ -1,7 +1,11 @@
-package dk.telenor.rest;
+package dk.telenor.service;
+
+import dk.telenor.*;
+import dk.telenor.SecurityException;
+import dk.telenor.entity.Employee;
+import dk.telenor.storage.Company;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -15,20 +19,19 @@ import java.util.Map;
  */
 
 @Path("/json")
+@Produces("application/json")
 public class JSONService {
 
     @GET
     @Path("/employee/{employeeId}")
-    @Produces("application/json")
     public Employee getEmployeeById(@PathParam("employeeId") Integer employeeId){
         Employee employee = Company.getEmployees().get(employeeId);
         employee.setDepartmentName(Company.getDepartments().get(employee.getDepartmentId()).getDepartmentName());
         return employee;
     }
 
-    @POST
+    @PUT
     @Path("/editEmployee")
-    @Produces("application/json")
     public Employee editEmployee(@QueryParam("employeeId") Integer employeeId,
                                  @QueryParam("employeeName") String employeeName,
                                  @QueryParam("employeeDeptId")Integer employeeDeptId) {
@@ -47,7 +50,7 @@ public class JSONService {
 
     @POST
     @Path("/createEmployee")
-    @Produces("application/json")
+    @Produces("text/plain")
     public Response createEmployee(@QueryParam("employeeName") String employeeName,
                                    @QueryParam("employeeDeptId")Integer employeeDeptId) {
 
@@ -69,9 +72,9 @@ public class JSONService {
         return Response.status(200).entity("Employee with name : " + employee.getName() + " is created.").build();
     }
 
-    @POST
+    @DELETE
     @Path("/deleteEmployee/{employeeId}")
-    @Produces("application/json")
+    @Produces("text/plain")
     public Response deleteEmployee(@PathParam("employeeId") Integer employeeId ) {
         Employee employee = null;
 
@@ -87,7 +90,6 @@ public class JSONService {
 
     @GET
     @Path("/employees")
-    @Produces("application/json")
     public List<Employee> getAllEmployees(){
         List<Employee> employees = new ArrayList<Employee>();
         Map<Integer, Employee> map = Company.getEmployees();
@@ -99,11 +101,15 @@ public class JSONService {
     }
 
     @POST
-    @Path("/register/{token}")
-    public Response registerToken(@PathParam("token") String token,
-                                  @Context HttpServletRequest request) {
-
-        Company.getTokens().put(token, new Date().getTime());
+    @Path("/register")
+    @Produces("text/plain")
+    @Consumes("application/json")
+    public Response registerToken(String token, @Context HttpServletRequest request) throws dk.telenor.SecurityException {
+        if (token != null && !token.isEmpty()) {
+            Company.getTokens().put(token, new Date().getTime());
+        } else {
+            throw new SecurityException("Provide security token");
+        }
 
         return Response.status(200).entity("Security token is set").build();
     }

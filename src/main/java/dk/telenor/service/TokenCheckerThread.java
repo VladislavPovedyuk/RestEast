@@ -1,4 +1,6 @@
-package dk.telenor.rest;
+package dk.telenor.service;
+
+import dk.telenor.storage.Company;
 
 import java.util.Date;
 import java.util.Map;

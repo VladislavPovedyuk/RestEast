@@ -1,4 +1,4 @@
-package dk.telenor.rest;
+package dk.telenor.entity;
 
 /**
  * @author Vladyslav Povediuk.

@@ -7,12 +7,12 @@
 
     <context-param>
         <param-name>resteasy.resources</param-name>
-        <param-value>dk.telenor.rest.JSONService</param-value>
+        <param-value>dk.telenor.service.JSONService</param-value>
     </context-param>
 
     <context-param>
         <param-name>resteasy.providers</param-name>
-        <param-value>dk.telenor.rest.SecurityInterceptor</param-value>
+        <param-value>dk.telenor.security.SecurityInterceptor, dk.telenor.ApplicationExceptionHandler</param-value>
     </context-param>
 
     <listener>

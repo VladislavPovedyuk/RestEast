@@ -1,5 +1,6 @@
-package dk.telenor.rest;
+package dk.telenor.security;
 
+import dk.telenor.storage.Company;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethod;
@@ -9,14 +10,11 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Vladyslav Povediuk.
