@@ -18,7 +18,7 @@ public class TokenCheckerThread extends Thread {
         System.out.println("TokenChecker started");
         Long currentTime = new Date().getTime();
         for (Map.Entry<String, Long> entry : tokens.entrySet()) {
-            if (currentTime - entry.getValue() > 60000) {
+            if (currentTime - entry.getValue() > 30000) {
                 tokens.remove(entry.getKey());
                 System.out.println("Token " + entry.getKey() + " removed.");
             }

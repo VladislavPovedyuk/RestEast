@@ -1,14 +1,10 @@
 package dk.telenor.resource;
 
-import dk.telenor.*;
 import dk.telenor.SecurityException;
 import dk.telenor.entity.Employee;
 import dk.telenor.entity.SecurityToken;
 import dk.telenor.storage.Company;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,9 +21,14 @@ public class JSONService {
 
     @GET
     @Path("/employee/{employeeId}")
-    public Employee getEmployeeById(@PathParam("employeeId") Integer employeeId){
-        Employee employee = Company.getEmployees().get(employeeId);
-        employee.setDepartmentName(Company.getDepartments().get(employee.getDepartmentId()).getDepartmentName());
+    public Employee getEmployeeById(@PathParam("employeeId") Integer employeeId) throws SecurityException{
+        Employee employee;
+        if (employeeId != null && employeeId > 0) {
+            employee = Company.getEmployees().get(employeeId);
+            employee.setDepartmentName(Company.getDepartments().get(employee.getDepartmentId()).getDepartmentName());
+        } else {
+            throw new SecurityException("Please, provide employeeId as parameter");
+        }
         return employee;
     }
 
@@ -35,8 +36,15 @@ public class JSONService {
     @Path("/editEmployee")
     public Employee editEmployee(@QueryParam("employeeId") Integer employeeId,
                                  @QueryParam("employeeName") String employeeName,
-                                 @QueryParam("employeeDeptId")Integer employeeDeptId) {
-        Employee employee = Company.getEmployees().get(employeeId);
+                                 @QueryParam("employeeDeptId")Integer employeeDeptId) throws SecurityException{
+        Employee employee;
+        if (employeeId != null && employeeId > 0) {
+            employee = Company.getEmployees().get(employeeId);
+            employee.setDepartmentName(Company.getDepartments().get(employee.getDepartmentId()).getDepartmentName());
+        } else {
+            throw new SecurityException("Please, provide employeeId as parameter");
+        }
+
         if (employeeName != null) {
             employee.setName(employeeName);
         }
@@ -57,7 +65,7 @@ public class JSONService {
 
         Employee employee = new Employee();
 
-        if (employeeName != null) {
+        if (employeeName != null && !employeeName.isEmpty()) {
             employee.setName(employeeName);
         } else {
             return Response.status(204).build();
@@ -106,7 +114,7 @@ public class JSONService {
     @Produces("text/plain")
     @Consumes("application/json")
     public Response registerToken(SecurityToken token) throws dk.telenor.SecurityException {
-        if (token != null && !token.getToken().isEmpty()) {
+        if (token.getToken() != null && !token.getToken().isEmpty()) {
             Company.getTokens().put(token.getToken(), new Date().getTime());
             System.out.println("Token " + token.getToken() + " registered");
         } else {
